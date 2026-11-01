@@ -30,6 +30,7 @@ module.exports.renderLoginForm =  (req, res) => {
 }
 
 module.exports.login = async(req, res) => {
+        console.log("Logged-in user:", req.user);
         req.flash("success","Welcome Back  to Wanderlust! You are logged in!");
         let redirectUrl = res.locals.redirectUrl || "/listings";
         console.log(redirectUrl);
