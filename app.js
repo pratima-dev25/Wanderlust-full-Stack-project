@@ -71,14 +71,27 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+    console.log("URL:", req.originalUrl);
+    console.log("Authenticated:", req.isAuthenticated());
+    console.log("User:", req.user ? req.user.username : "No user");
+    console.log("Session ID:", req.sessionID);
+    next();
+});
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
-    res.locals.error =  req.flash("error");
+    res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
+
+    console.log("Middleware user:", res.locals.currUser?.username);
+    console.log("Middleware authenticated:", req.isAuthenticated());
+
     next();
 });
 
