@@ -41,6 +41,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
+app.set("trust proxy", 1);
 
 const store = MongoStore.create({
     mongoUrl : dbUrl,
@@ -56,12 +57,13 @@ const sessionOptions = {
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie:{
-        expires: Date.now() + 7 * 24 *60 * 60 *1000,
-        maxAge: 7 * 24 *60 * 60 *1000,
+    cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax"
     }
-}
+};
 
 
 app.use(session(sessionOptions));
